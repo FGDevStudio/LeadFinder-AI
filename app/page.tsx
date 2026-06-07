@@ -1,19 +1,17 @@
-import StatCard from "../components/StatCard";
+import { supabase } from "../supabase/client";
 
-export default function Home() {
+export default async function Home() {
+  const { data: leads } = await supabase
+    .from("leads")
+    .select("*");
+
   return (
     <main className="min-h-screen p-8">
       <h1 className="text-4xl font-bold mb-6">
         LeadFinder AI
       </h1>
 
-      <div className="grid gap-4 md:grid-cols-3">
-        <StatCard title="Leads Totales" value={0} />
-        <StatCard title="Leads Calificados" value={0} />
-        <StatCard title="Mensajes Generados" value={0} />
-      </div>
-
-      <div className="mt-8 border rounded-lg p-4">
+      <div className="border rounded-lg p-4">
         <h2 className="text-2xl font-semibold mb-4">
           Leads Encontrados
         </h2>
@@ -23,22 +21,20 @@ export default function Home() {
             <tr>
               <th className="text-left">Empresa</th>
               <th className="text-left">Categoría</th>
-              <th className="text-left">Calificación</th>
+              <th className="text-left">Teléfono</th>
+              <th className="text-left">Score</th>
             </tr>
           </thead>
 
           <tbody>
-            <tr>
-              <td>TPrint</td>
-              <td>Imprenta</td>
-              <td>Alta</td>
-            </tr>
-
-            <tr>
-              <td>Empresa Demo</td>
-              <td>Marketing</td>
-              <td>Media</td>
-            </tr>
+            {leads?.map((lead) => (
+              <tr key={lead.id}>
+                <td>{lead.business_name}</td>
+                <td>{lead.category}</td>
+                <td>{lead.phone}</td>
+                <td>{lead.score}</td>
+              </tr>
+            ))}
           </tbody>
         </table>
       </div>
